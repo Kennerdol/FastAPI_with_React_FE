@@ -1,7 +1,12 @@
 from fastapi import FastAPI
+import database_models
 from models import Product
+from database import session, engine
 
 app = FastAPI()
+
+# Creating the tables
+database_models.Base.metadata.create_all(bind=engine)
 
 # Homepage route
 @app.get("/")
@@ -62,3 +67,15 @@ def delete_product(product_id: int):
 
     return {"error": "Product not found"}
 
+
+# SQLAlchemy Operations
+
+@app.get("/products")
+def get_products():
+
+    # db connection
+    db = session()
+
+    # query the database
+    db.query(Product).all()
+    return products

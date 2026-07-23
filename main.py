@@ -22,6 +22,20 @@ products = [
     Product(id=6, name="Tablet", description="A tablet device", price=12.99, stock=60),
 ]
 
+# Function to populate the products table
+def init_db():
+    db = session()
+    count = db.query(database_models.Product).count()
+    if count == 0:
+        for product in products:
+            db_product = database_models.Product(**product.model_dump())
+            db.add(db_product)
+        db.commit()
+        db.close()
+
+init_db()
+
+
 # Products route
 @app.get("/products")
 def get_products():

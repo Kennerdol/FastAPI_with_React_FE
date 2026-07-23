@@ -62,17 +62,3 @@ def delete_product(product_id: int):
 
     return {"error": "Product not found"}
 
-
-# SQLAlchemy Operations
-
-@app.put("/products")
-def update_product(product_id:int, updated_product: Product):
-    for product in products:
-            if product.id == product_id:
-                product.name = updated_product.name
-                product.description = updated_product.description
-                product.price = updated_product.price
-                product.stock = updated_product.stock
-                return {"message": "Product updated successfully"}
-
-    return {"error": "Product not found"}

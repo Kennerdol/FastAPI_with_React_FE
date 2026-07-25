@@ -4,9 +4,16 @@ import database_models
 from models import Product
 from database import session, engine
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+)
 
 # Creating the tables
 database_models.Base.metadata.create_all(bind=engine)
@@ -17,12 +24,12 @@ def greet_user():
     return "Welcome to Telusko Trac"
 
 products = [
-    Product(id=1, name="Phone", description="A smartphone", price=10.99, stock=100),
-    Product(id=2, name="Laptop", description="A portable computer", price=19.99, stock=50),
-    Product(id=3, name="Mic", description="A microphone", price=5.99, stock=200),
-    Product(id=4, name="Camera", description="A digital camera", price=15.99, stock=30),
-    Product(id=5, name="Headphones", description="A pair of headphones", price=7.99, stock=80),
-    Product(id=6, name="Tablet", description="A tablet device", price=12.99, stock=60),
+    Product(id=1, name="Phone", description="A smartphone", price=10.99, quantity=100),
+    Product(id=2, name="Laptop", description="A portable computer", price=19.99, quantity=50),
+    Product(id=3, name="Mic", description="A microphone", price=5.99, quantity=200),
+    Product(id=4, name="Camera", description="A digital camera", price=15.99, quantity=30),
+    Product(id=5, name="Headphones", description="A pair of headphones", price=7.99, quantity=80),
+    Product(id=6, name="Tablet", description="A tablet device", price=12.99, quantity=60),
 ]
 
 # Dependency injection
@@ -77,7 +84,7 @@ def update_product(product_id: int, updated_product: Product):
             product.name = updated_product.name
             product.description = updated_product.description
             product.price = updated_product.price
-            product.stock = updated_product.stock
+            product.quantity = updated_product.quantity
             return product
 
     return {"error": "Product not found"}
@@ -120,7 +127,7 @@ def update_product(product_id: int, updated_product: Product, db: Session = Depe
         db_product.name = updated_product.name
         db_product.description = updated_product.description
         db_product.price = updated_product.price
-        db_product.stock = updated_product.stock
+        db_product.quantity = updated_product.quantity
         db.commit()
         return {"product updated succesfully"}
     return {"error": "Product not found"}
